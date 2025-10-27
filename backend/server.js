@@ -46,11 +46,18 @@ io.on('connection', socket => {
 });
 
 const PORT = process.env.PORT || 4000;
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/car-design', {
-  useNewUrlParser: true, useUnifiedTopology: true
-}).then(()=> {
-  server.listen(PORT, ()=> console.log('Server listening on', PORT));
-}).catch(err => {
-  console.error('MongoDB connection error:', err);
-  server.listen(PORT, ()=> console.log('Server listening without DB on', PORT));
+
+server.listen(PORT, () => {
+  console.log(`✅ Server is running on port ${PORT}`);
 });
+
+// حاول الاتصال بـ MongoDB بدون تعطيل السيرفر
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/car-design', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log('✅ Connected to MongoDB');
+}).catch(err => {
+  console.error('⚠️ MongoDB connection failed:', err.message);
+});
+
